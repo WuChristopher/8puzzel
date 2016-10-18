@@ -70,7 +70,14 @@ public class Board {
 
     public Board twin() {
         int[][] twinBlocks = new int[dim][dim];
-        // don't use arraycopy() because it does shallow copy
+        /**
+         * Do Not use System.arraycopy() to clone the 2d array, cause' the
+         * 2d array is just a 1d array holding references to each sub 1d array
+         * and System.arraycopy() uses shallow copy, thus the fields of the outer
+         * 1d array of two arrays will point to the same objects each. Later on,
+         * we change the values of one 2d array, then the change will be reflected
+         * in the other one. Consequently, we manually do the deep copy as follows.
+         */
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
                 twinBlocks[i][j] = (int) blocks[i][j];
