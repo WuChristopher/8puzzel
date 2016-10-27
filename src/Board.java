@@ -28,14 +28,18 @@ public class Board {
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
                 this.blocks[i][j] = (char) blocks[i][j];
-                if (0 == blocks[i][j]) {
-                    blankRow = i;
-                    blankCol = j;
-                }
-                // calc hamming val for each block
-                if ((dim * i + j) == (dim * dim - 1) && blocks[i][j] != 0)
-                    hammingVal++;
-                else if (blocks[i][j] != n * i + j + 1 && blocks[i][j] != 0)
+
+                /**
+                 * If blocks[i][i] equals 0, it's not a block, which shouldn't be
+                 * taken into account when calculating Hamming value.
+                 * For hamming value, when all the blocks are in the correct position,
+                 * it should be 0. For instance, 3x3 blocks, a[0][0] should be 1,...,
+                 * a[2][1] should be 8, that is, it equals (dim * i + j + 1). So if
+                 * the block is not 0,which is not a real block, and if the block does
+                 * not equal (dim * i + j + 1) as well, this block is out of position.
+                 * At this time, Hamming value should be incremented.
+                 */
+                if (blocks[i][j] != dim * i + j + 1 && blocks[i][j] != 0)
                     hammingVal++;
                 // calc manhattan val for each block and record black pos
                 int row;

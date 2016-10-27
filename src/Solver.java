@@ -1,9 +1,8 @@
-
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.StdOut;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Created by zack on 14/10/2016.
@@ -13,6 +12,10 @@ public class Solver {
     private boolean solvable = false;
     private SearchNode sNode;
 
+    /**
+     * When comparing two nodes' priority, first compare the Manhattan priority, if the
+     * Manhattan priority equals each other, use the Hamming value to break the equality.
+     */
     private class SearchNode implements Comparable<SearchNode> {
         public final int moves;
         public final Board board;
@@ -48,6 +51,11 @@ public class Solver {
         MinPQ<SearchNode> minPQTwin = new MinPQ<>();
         minPQ.insert(sNode);
         minPQTwin.insert(sNodeTwin);
+        /**
+         * Per A* algorithm, the board or any twin can be solved. Thus we try solving
+         * the board and its twin simultaneously. If the twin is solved, the board is
+         * deemed to be unsolvable.
+         */
         while (true) {
             if (!minPQ.isEmpty()) {
                 sNode = minPQ.delMin();
@@ -89,10 +97,14 @@ public class Solver {
 
     public Iterable<Board> solution() {
         if (solvable) {
-            ArrayList<Board> sol = new ArrayList<>();
+            /**
+             * Use LinkedList instead of ArrayList, for all the boards are inserted into
+             * the first place. ArrayList is implemented by array, which is inefficient.
+             */
+            LinkedList<Board> sol = new LinkedList<>();
             SearchNode sn = sNode;
             do {
-                sol.add(0, sn.board);
+                sol.addFirst(sn.board);
                 sn = sn.prev;
             } while (sn != null);
             return sol;
